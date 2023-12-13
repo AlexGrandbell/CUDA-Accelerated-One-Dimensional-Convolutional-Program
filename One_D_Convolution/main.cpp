@@ -1,3 +1,4 @@
+//纯CPU程序
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -17,6 +18,8 @@ void convolution(float* input, float* kernel, float* output) {
 }
 
 int main() {
+    // 计时
+    clock_t start_time = clock();
     // 随机生成输入序列
     srand((unsigned int)time(NULL));
 
@@ -37,8 +40,8 @@ int main() {
     const int output_size = INPUT_SIZE - kernel_size + 1;
     float output[output_size];
 
-    // 计时
-    clock_t start_time = clock();
+//    // 计时
+//    clock_t start_time = clock();
 
     // 执行卷积运算
     convolution(input, kernel, output);
