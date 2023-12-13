@@ -1,3 +1,4 @@
+//异步流测试
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -65,6 +66,8 @@ void convolutionForCPU(double* input, double* kernel, double* output) {
 }
 
 int main(const int argc, const char** argv) {
+    //开始时间
+    clock_t start_time = clock();
     int numberOfSMs,deviceId;
     size_t numberOfBlocks,threadsPerBlock;//线程块数和块中线程数
     cudaGetDevice(&deviceId);//获取GPU的ID
@@ -93,8 +96,8 @@ int main(const int argc, const char** argv) {
     cudaMemPrefetchAsync(kernel,KERNEL_SIZE_t,deviceId);
     cudaMemPrefetchAsync(outputGPU,output_size_t,deviceId);
 
-    //开始时间
-    clock_t start_time = clock();
+//    //开始时间
+//    clock_t start_time = clock();
 
     //GPU初始化元素
     initConvolution<<<numberOfBlocks,threadsPerBlock>>>(input,kernel);
@@ -102,7 +105,6 @@ int main(const int argc, const char** argv) {
     //GPU处理卷积
     convolutionForGPU1<<<numberOfBlocks, threadsPerBlock,0,stream1>>>(input, kernel, outputGPU);
     convolutionForGPU2<<<numberOfBlocks, threadsPerBlock,0,stream2>>>(input, kernel, outputGPU);
-    cudaDeviceSynchronize();
     cudaStreamSynchronize(stream1);
     cudaStreamSynchronize(stream2);
     cudaStreamDestroy(stream1);
